@@ -1,0 +1,100 @@
+---
+- name: Start rke2-server on master0
+  ansible.builtin.copy:
+      src: "/usr/local/lib/systemd/system/rke2-server.service"
+      dest: "/etc/systemd/system/rke2-server.service"
+      mode: '0644'
+  notify:
+      - systemd daemon reload
+      - "restart rke2 server service"
+  when:
+      - inventory_hostname == groups["master"]|first
+
+- name: Copy k8s admission configuration to nodes
+  ansible.builtin.copy:
+      src: "{{ item }}"
+      dest: "/etc/kubernetes/adm-control/{{ item }}"
+      mode: '0644'
+  with_items:
+      - admission-control.yaml
+      - eventratelimit.yaml
+
+- name: Copy cilium configuration to masters
+  ansible.builtin.template:
+      src: "cilium.yaml.j2"
+      dest: "/var/lib/rancher/rke2/server/manifests/helmchartconfig-cilium.yaml"
+      mode: '0644'
+
+- name: Configure rke2-server on master0
+  ansible.builtin.template:
+      src: server.yaml.j2
+      dest: /etc/rancher/rke2/config.yaml
+      owner: root
+      group: root
+      mode: "0600"
+  notify: "restart rke2 server service"
+  when:
+      - inventory_hostname == groups["masters"]|first
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Wait for kubeconfig
+  ansible.builtin.wait_for:
+      path: "{{ root_kubeconfig }}"
+      delay: 5
+  when:
+      - inventory_hostname == groups["masters"]|first
+
+- name: Fetch admin kubeconfig from master0
+  ansible.builtin.fetch:
+      src: "{{ root_kubeconfig }}"
+      dest: "{{ local_kubeconfig }}"
+      flat: true
+  when:
+      - inventory_hostname == groups["masters"]|first
+  delegate_to: localhost
+
+- name: Replace server address in kubeconfig
+  ansible.builtin.lineinfile:
+      path: "{{ local_kubeconfig }}"
+      line: "    server: https://{{ server.address }}:6443"
+      regex: "^    server: "
+  when:
+      - inventory_hostname == groups["masters"]|first
+  delegate_to: localhost
+
+- name: Wait for k8s api
+  ansible.builtin.wait_for:
+      host: "https://{{ server.address }}"
+      port: 6443
+      delay: 5
+  when:
+      - inventory_hostname == groups["masters"]|first
+
+- name: Configure remaining masters
+  ansible.builtin.template:
+      src: server.yaml.j2
+      dest: /etc/rancher/rke2/config.yaml
+      owner: root
+      group: root
+      mode: "0600"
+  notify: "restart rke2 server service"
+  when:
+      - not inventory_hostname == groups["master"]|first
+
+- name: Start rke2-server on master0
+  ansible.builtin.copy:
+      src: "/usr/local/lib/systemd/system/rke2-server.service"
+      dest: "/etc/systemd/system/rke2-server.service"
+      mode: '0644'
+  notify:
+      - systemd daemon reload
+      - "restart rke2 server service"
+  when:
+      - not inventory_hostname == groups["master"]|first
+
+- name: Start/enable all rke2-server services
+  ansible.builtin.systemd:
+      name: rke2-server.service
+      enabled: true

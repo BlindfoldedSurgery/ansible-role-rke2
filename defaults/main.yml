@@ -1,0 +1,47 @@
+---
+rke2_kube_apiserver_nodeport_range: "30000-32767"
+root_kubeconfig: /root/.kube/config
+local_kubeconfig: ./rke2-admin-config
+
+server:
+    address: k8s.carstens.tech
+data_dir: /var/lib/rancher/rke2
+service_cidr: 10.42.0.0/16
+cluster:
+    cidr: 10.43.0.0/16
+    dns: 10.43.0.10
+    domain: cluster.local
+apiserver:
+    args:
+        - "enable-admission-plugins=NodeRestriction,EventRateLimit"
+        - "service-node-port-range={{ rke2_kube_apiserver_nodeport_range }}"
+        - "tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+scheduler:
+    args:
+        - "bind-address=0.0.0.0"
+        - "secure-port=10259"
+        - "authorization-kubeconfig=/var/lib/rancher/rke2/server/cred/scheduler.kubeconfig"
+        - "authentication-kubeconfig=/var/lib/rancher/rke2/server/cred/scheduler.kubeconfig"
+controller_manager:
+    args:
+        - "bind-address=0.0.0.0"
+        - "secure-port=10257"
+        - "authorization-kubeconfig=/var/lib/rancher/rke2/server/cred/controller.kubeconfig"
+        - "authentication-kubeconfig=/var/lib/rancher/rke2/server/cred/controller.kubeconfig"
+kubelet:
+    args:
+        - "tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+etcd:
+    metrics: false
+    snapshot:
+        cron: "0 */12 * * *"
+        retention: 10
+        dir: "{{ data_dir }}/server/db/snapshots"
+disable:
+    - rke2-ingress-nginx
+registry:
+    default: docker.io
+cni: cilium
+
+# TODO
+token: "werfoineartEOIAFD2348"

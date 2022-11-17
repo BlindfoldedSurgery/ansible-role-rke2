@@ -1,0 +1,16 @@
+---
+
+dependencies: []
+
+galaxy_info:
+  role_name: 'rke2'
+  namespace: torbencarstens
+  author: 'Torben Carstens'
+  description: 'Install rke2'
+  min_ansible_version: 6.4.0
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+  galaxy_tags: []
+  license: MIT

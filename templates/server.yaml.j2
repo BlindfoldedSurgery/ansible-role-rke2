@@ -1,0 +1,28 @@
+{% if inventory_hostname != groups["master"]|first %}
+server: "https://{{ server.address }}:9345"
+{% endif %}
+tls-san:
+  - {{ server.address }}
+data-dir: {{ data_dir }}
+cluster-cidr: {{ cluster.cidr }}
+service-cidr: {{ service_cidr }}
+cluster-dns: {{ cluster.dns }}
+cluster-domain: {{ cluster.domain }}
+write-kubeconfig: {{ root_kubeconfig }}
+kube-apiserver-arg:
+{{ apiserver.args | to_nice_yaml(indent=4) }}
+kube-scheduler-arg:
+{{ scheduler.args | to_nice_yaml(indent=4) }}
+kube-controller-manager-arg:
+{{ controller_manager.args | to_nice_yaml(indent=4) }}
+kubelet-arg:
+{{ kubelet.args | to_nice_yaml(indent=4) }}
+etcd-expose-metrics: {{ etcd.metrics }}
+etcd-snapshot-schedule-cron: {{ etcd.snapshot.cron }}
+etcd-snapshot-retention: {{ etcd.snapshot.retention }}
+etcd-snapshot-dir: {{ etcd.snapshot.dir }}
+rke2-disable:
+{{ disable | to_nice_yaml(indent=4) }}
+node-name: {{ inventory_hostname }}
+systemd-default-registry: {{ registry.default }}
+cni: {{ cni }}

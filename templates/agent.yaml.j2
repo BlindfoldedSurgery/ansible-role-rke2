@@ -1,0 +1,7 @@
+server: "https://{{ server.address }}:9345"
+data-dir: {{ data_dir }}
+token: {{ token }}
+node-name: {{ inventory_hostname }}
+kubelet-arg:
+{{ kubelet.args | to_nice_yaml(indent=4) }}
+systemd-default-registry: {{ registry.default }}
