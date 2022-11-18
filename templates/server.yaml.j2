@@ -11,6 +11,8 @@ cluster-domain: {{ cluster.domain }}
 write-kubeconfig: {{ root_kubeconfig }}
 kube-apiserver-arg:
 {{ apiserver.args | to_nice_yaml(indent=4) }}
+kube-apiserver-extra-mount:
+{{ apiserver.extra_mount | to_nice_yaml(indent=4) }}
 kube-scheduler-arg:
 {{ scheduler.args | to_nice_yaml(indent=4) }}
 kube-controller-manager-arg:

@@ -16,6 +16,8 @@ apiserver:
         - "enable-admission-plugins=NodeRestriction,EventRateLimit"
         - "service-node-port-range={{ rke2_kube_apiserver_nodeport_range }}"
         - "tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    extra_mounts:
+        - "/etc/kubneretes/adm-control:/etc/kubernetes/adm-control:ro"
 scheduler:
     args:
         - "bind-address=0.0.0.0"
