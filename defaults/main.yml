@@ -47,4 +47,3 @@ disable:
 registry:
   default: docker.io
 cni: cilium
-

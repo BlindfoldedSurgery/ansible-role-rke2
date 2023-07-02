@@ -64,6 +64,8 @@
     dest: "{{ local_kubeconfig }}"
   delegate_to: localhost
   become_user: torben
+  when:
+  - inventory_hostname == groups["master"]|first
 
 - name: Replace server address in kubeconfig
   ansible.builtin.lineinfile:
