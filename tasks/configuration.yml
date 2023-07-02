@@ -9,6 +9,8 @@
   with_items:
       - "/etc/rancher/rke2"
       - "{{ etcd.snapshot.dir }}"
+      - /etc/kubernetes/adm-control
+      - /var/lib/rancher/rke2/server/manifests/
 
 - name: Use rke2-cis-sysctl for rke2 service
   ansible.builtin.copy:

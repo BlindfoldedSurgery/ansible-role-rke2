@@ -1,5 +1,5 @@
 {% if inventory_hostname != groups["master"]|first %}
-server: "https://{{ server.address }}:9345"
+server: "https://{{ server.address }}:9345" # TODO: use LB address
 {% endif %}
 tls-san:
   - {{ server.address }}
@@ -23,8 +23,9 @@ etcd-expose-metrics: {{ etcd.metrics }}
 etcd-snapshot-schedule-cron: {{ etcd.snapshot.cron }}
 etcd-snapshot-retention: {{ etcd.snapshot.retention }}
 etcd-snapshot-dir: {{ etcd.snapshot.dir }}
-rke2-disable:
+disable:
 {{ disable | to_nice_yaml(indent=4) }}
 node-name: {{ inventory_hostname }}
 systemd-default-registry: {{ registry.default }}
 cni: {{ cni }}
+token: {{ rke2_join_token }}

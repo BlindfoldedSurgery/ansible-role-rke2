@@ -23,4 +23,4 @@
   tags:
       - rke2:config
   become: true
-  when: inventory_hostname in groups["agent"]
+  when: inventory_hostname in groups["worker"]

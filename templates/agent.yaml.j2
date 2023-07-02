@@ -1,6 +1,6 @@
-server: "https://{{ server.address }}:9345"
+server: "https://{{ server.address }}:9345" # TODO: use lb address
 data-dir: {{ data_dir }}
-token: {{ token }}
+token: {{ rke2_join_token }}
 node-name: {{ inventory_hostname }}
 kubelet-arg:
 {{ kubelet.args | to_nice_yaml(indent=4) }}
