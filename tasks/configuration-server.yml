@@ -101,6 +101,7 @@
     src: "/usr/local/lib/systemd/system/rke2-server.service"
     dest: "/etc/systemd/system/rke2-server.service"
     mode: '0644'
+    remote_src: true
   notify:
   - systemd daemon reload
   - "restart rke2 server service"
