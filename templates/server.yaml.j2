@@ -1,8 +1,9 @@
 {% if inventory_hostname != groups["master"]|first %}
-server: "https://{{ server.address }}:9345" # TODO: use LB address
+server: "https://{{ hostvars[inventory_hostname]['groups']['loadbalancer_internal']|first }}:9345" # TODO: use LB address
 {% endif %}
 tls-san:
   - {{ server.address }}
+  - {{ hostvars[inventory_hostname]['groups']['loadbalancer_external']|first }}
 data-dir: {{ data_dir }}
 cluster-cidr: {{ cluster.cidr }}
 service-cidr: {{ service_cidr }}
@@ -25,7 +26,7 @@ etcd-snapshot-retention: {{ etcd.snapshot.retention }}
 etcd-snapshot-dir: {{ etcd.snapshot.dir }}
 disable:
 {{ disable | to_nice_yaml(indent=4) }}
-node-name: {{ inventory_hostname }}
+node-name: {{ inventory_hostname | replace("_", "-") }}
 systemd-default-registry: {{ registry.default }}
 cni: {{ cni }}
 token: {{ rke2_join_token }}
