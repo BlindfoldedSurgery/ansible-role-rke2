@@ -79,7 +79,7 @@
 
 - name: Wait for k8s api
   ansible.builtin.wait_for:
-    host: "{{ loadbalancer_ip }}"
+    host: "{{ hostvars[inventory_hostname]['groups']['loadbalancer_external']|first }}"
     port: 6443
     delay: 5
   when:
