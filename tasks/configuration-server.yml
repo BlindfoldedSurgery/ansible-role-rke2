@@ -28,6 +28,11 @@
     dest: "/var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml"
     mode: '0644'
 
+- name: set node-ip
+  ansible.builtin.shell:
+    cmd: ip a | grep "10\.0\.0\.[3-9]" | awk '{print $2}' | cut -f1 -d'/'
+  register: node_ip
+
 - name: Configure rke2-server on master0
   ansible.builtin.template:
     src: server.yaml.j2
