@@ -14,6 +14,7 @@ etcd-s3-secret-key: {{ etcd_s3_aws_secret_access_key }}
 tls-san:
   - {{ server.address }}
   - {{ hostvars[inventory_hostname]['groups']['loadbalancer_external']|first }}
+  - {{ hostvars[inventory_hostname]['groups']['loadbalancer_internal']|first }}
 data-dir: {{ data_dir }}
 cluster-cidr: {{ cluster.cidr }}
 service-cidr: {{ service_cidr }}
