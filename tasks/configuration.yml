@@ -35,3 +35,16 @@
       system: true
       shell: /sbin/nologin
       create_home: false
+
+- name: add aliases to /root/.bashrc
+  ansible.builtin.lineinfile:
+    path: /root/.bashrc
+    line: "{{ item }}"
+    create: yes
+  loop:
+  - "# see https://gist.github.com/superseb/3b78f47989e0dbc1295486c186e944bf"
+  - "alias crictl='/var/lib/rancher/rke2/bin/crictl -r unix:///run/k3s/containerd/containerd.sock -c /var/lib/rancher/rke2/agent/etc/containerd/config.toml'"
+  - "alias k='/var/lib/rancher/rke2/bin/kubectl -n $NS'"
+  - "export NS='kube-system'"
+  tags:
+  - cilium
