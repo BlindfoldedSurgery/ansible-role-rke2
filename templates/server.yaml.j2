@@ -1,5 +1,5 @@
 {% if inventory_hostname != groups["master"]|first %}
-server: "https://{{ hostvars[inventory_hostname]['groups']['loadbalancer_internal']|first }}:9345" # TODO: use LB address
+server: "https://{{ hostvars[inventory_hostname]['groups']['loadbalancer_internal']|first }}:9345"
 {% endif %}
 tls-san:
   - {{ server.address }}
