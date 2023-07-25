@@ -32,28 +32,25 @@ spec:
       enabled: false # TODO
     eni:
       enabled: true
-    # this is enabled by default ; enable this at some point?
     hubble:
-      enabled: false
-      # tls:
-      #   certManagerIssuerRef:
-      #     group: cert-manager.io
-      #     kind: ClusterIssuer
-      #     name: letsencrypt-issuer
-      #   server:
-      #     extraDnsNames:
-      #       - api.hubble.carstens.tech
-      # ui:
-      #   enabled: true
-      #   ingress:
-      #     enabled: true
-      #     annotations:
-      #       kubernetes.io/tls-acme: "true"
-      #       cert-manager.io/issue-temporary-certificate: "false"
-      #       cert-manager.io/cluster-issuer: "letsencrypt-issuer"
-      #     hosts:
-      #       - hubble.carstens.tech
-      #     tls:
-      #       - secretName: tls-hubble-ui
-      #         hosts:
-      #           hubble.carstens.tech
+      enabled: true
+      tls:
+        certManagerIssuerRef:
+          group: cert-manager.io
+          kind: ClusterIssuer
+          name: letsencrypt-issuer
+        server:
+          extraDnsNames:
+            - api.hubble.carstens.tech
+      ui:
+        enabled: true
+        frontend:
+          server:
+            ipv6:
+              enabled: false
+        ingress:
+          enabled: false
+      relay:
+        enabled: true
+        rollOutPods: true
+
