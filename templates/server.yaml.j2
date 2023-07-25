@@ -40,3 +40,4 @@ node-name: {{ inventory_hostname | replace("_", "-") }}
 systemd-default-registry: {{ registry.default }}
 cni: {{ cni }}
 token: {{ rke2_join_token }}
+disable-kube-proxy: true
