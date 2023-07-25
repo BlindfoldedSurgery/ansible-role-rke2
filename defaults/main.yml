@@ -47,3 +47,9 @@ disable:
 registry:
   default: docker.io
 cni: cilium
+
+s3_backup:
+  enabled: true
+  endpoint: https://sos-de-fra-1.exo.io
+  bucket: rke2-etcd-backup
+  region: de-fra-1
