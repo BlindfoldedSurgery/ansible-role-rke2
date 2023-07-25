@@ -8,7 +8,7 @@ etcd-s3-bucket: {{ s3_backup.bucket }}
 etcd-s3-region: {{ s3_backup.region }}
 etcd-s3-access-key: {{ etcd_s3_aws_access_key_id }}
 etcd-s3-secret-key: {{ etcd_s3_aws_secret_access_key }}
-{% end %}
+{% endif %}
 {% endif %}
 
 tls-san:
