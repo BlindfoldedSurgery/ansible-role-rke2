@@ -3,7 +3,7 @@ root_kubeconfig: /root/.kube/config
 local_kubeconfig: /home/torben/.kube/rke2-admin-config
 
 rke2:
-  version: v1.27.3+rke2r1
+  version: v1.27.4+rke2r1
 
 server:
   address: k8s.carstens.tech
