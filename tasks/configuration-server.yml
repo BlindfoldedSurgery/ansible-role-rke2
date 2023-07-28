@@ -60,8 +60,6 @@
   register: kubeconfig
   when:
   - inventory_hostname == groups["master"]|first
-  tags:
-    - test
 
 - name: Write local kubeconfig
   ansible.builtin.copy:

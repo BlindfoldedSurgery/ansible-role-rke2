@@ -1,3 +1,8 @@
+- name: set node-ip
+  ansible.builtin.shell:
+    cmd: ip a | grep "10\.0\.0\.[3-9]" | awk '{print $2}' | cut -f1 -d'/'
+  register: node_ip
+
 - name: Configure rke2-agent
   ansible.builtin.template:
     src: agent.yaml.j2
