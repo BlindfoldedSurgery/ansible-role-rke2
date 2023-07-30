@@ -44,8 +44,11 @@
     mode: "0644"
   loop:
     - "# see https://gist.github.com/superseb/3b78f47989e0dbc1295486c186e944bf"
-    - alias crictl='/var/lib/rancher/rke2/bin/crictl -r unix:///run/k3s/containerd/containerd.sock -c /var/lib/rancher/rke2/agent/etc/containerd/config.toml'
+    - alias crictl="/var/lib/rancher/rke2/bin/crictl -r unix:///run/k3s/containerd/containerd.sock -c /var/lib/rancher/rke2/agent/etc/containerd/config.toml"
     - alias k='/var/lib/rancher/rke2/bin/kubectl -n $NS'
     - export NS='kube-system'
+    - export CRI_CONFIG_FILE='/var/lib/rancher/rke2/agent/etc/crictl.yaml'
+    - export etcdcontainer=$(/var/lib/rancher/rke2/bin/crictl ps --label io.kubernetes.container.name=etcd --quiet)
+    - alias etcdctl="/var/lib/rancher/rke2/bin/crictl exec $etcdcontainer sh -c \"ETCDCTL_ENDPOINTS='https://127.0.0.1:2379' ETCDCTL_CACERT='/var/lib/rancher/rke2/server/tls/etcd/server-ca.crt' ETCDCTL_CERT='/var/lib/rancher/rke2/server/tls/etcd/server-client.crt' ETCDCTL_KEY='/var/lib/rancher/rke2/server/tls/etcd/server-client.key' ETCDCTL_API=3 etcdctl\""
   tags:
     - cilium
