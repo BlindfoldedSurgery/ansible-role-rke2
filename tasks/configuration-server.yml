@@ -22,6 +22,7 @@
 
 - name: Empty server manifests
   ansible.builtin.shell: rm -rf /var/lib/rancher/rke2/server/manifests/*
+  changed_when: true
 
 - name: Copy cilium values configuration to master
   ansible.builtin.template:
@@ -29,10 +30,12 @@
     dest: /var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml
     mode: "0644"
 
-- name: set node-ip
+- name: Set node-ip
   ansible.builtin.shell:
-    cmd: ip a | grep "10\.0\.0\.[3-9]" | awk '{print $2}' | cut -f1 -d'/'
+    cmd: set -o pipefail && ip a | grep "10\.0\.0\.[3-9]" | awk '{print $2}' | cut -f1 -d'/'
   register: node_ip
+  # ansible-lint wants this
+  changed_when: false
 
 - name: Configure rke2-server on master0
   ansible.builtin.template:
@@ -41,7 +44,7 @@
     owner: root
     group: root
     mode: "0600"
-  notify: restart rke2 server service
+  notify: Restart rke2 server service
   when:
     - inventory_hostname == groups["master"]|first
 
@@ -66,6 +69,7 @@
   ansible.builtin.copy:
     content: "{{ kubeconfig['content'] | b64decode }}"
     dest: "{{ local_kubeconfig }}"
+    mode: "0600"
   delegate_to: localhost
   become_user: "{{ local_kubeconfig_become_user }}"
   when:
@@ -96,7 +100,7 @@
     owner: root
     group: root
     mode: "0600"
-  notify: restart rke2 server service
+  notify: Restart rke2 server service
   when:
     - not inventory_hostname == groups["master"]|first
 
@@ -107,8 +111,8 @@
     mode: "0644"
     remote_src: true
   notify:
-    - systemd daemon reload
-    - restart rke2 server service
+    - Systemd daemon reload
+    - Restart rke2 server service
   when:
     - not inventory_hostname == groups["master"]|first
 

@@ -18,7 +18,7 @@
     dest: /etc/sysctl.d/60-rke2-cis.conf
     mode: "0644"
     remote_src: true
-  notify: restart sysctl
+  notify: Restart sysctl
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
@@ -36,11 +36,12 @@
     shell: /sbin/nologin
     create_home: false
 
-- name: add aliases to /root/.bashrc
+- name: Add aliases to /root/.bashrc
   ansible.builtin.lineinfile:
     path: /root/.bashrc
     line: "{{ item }}"
     create: true
+    mode: "0644"
   loop:
     - "# see https://gist.github.com/superseb/3b78f47989e0dbc1295486c186e944bf"
     - alias crictl='/var/lib/rancher/rke2/bin/crictl -r unix:///run/k3s/containerd/containerd.sock -c /var/lib/rancher/rke2/agent/etc/containerd/config.toml'

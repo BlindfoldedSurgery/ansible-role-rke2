@@ -1,8 +1,10 @@
 ---
-- name: set node-ip
+- name: Set node-ip
   ansible.builtin.shell:
-    cmd: ip a | grep "10\.0\.0\.[3-9]" | awk '{print $2}' | cut -f1 -d'/'
+    cmd: set -o pipefail && ip a | grep "10\.0\.0\.[3-9]" | awk '{print $2}' | cut -f1 -d'/'
   register: node_ip
+  # ansible-lint wants this
+  changed_when: false
 
 - name: Configure rke2-agent
   ansible.builtin.template:
@@ -11,7 +13,7 @@
     owner: root
     group: root
     mode: "0600"
-  notify: restart rke2 agent service
+  notify: Restart rke2 agent service
 
 - name: Start rke2-agent
   ansible.builtin.copy:
@@ -20,8 +22,8 @@
     mode: "0644"
     remote_src: true
   notify:
-    - systemd daemon reload
-    - restart rke2 agent service
+    - Systemd daemon reload
+    - Restart rke2 agent service
 
 - name: Start/enable all rke2-agent services
   ansible.builtin.systemd:

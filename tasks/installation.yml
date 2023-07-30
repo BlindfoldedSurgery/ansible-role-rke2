@@ -28,9 +28,9 @@
   #     dest: /usr/local
   #     remote_src: true
   ansible.builtin.shell: tar xzf "{{ tarball_tempfile.path }}" -C /usr/local
-  notify: systemd daemon reload
+  notify: Systemd daemon reload
 
 - name: Delete tarball
-  file:
+  ansible.builtin.file:
     state: absent
     path: "{{ tarball_tempfile.path }}"

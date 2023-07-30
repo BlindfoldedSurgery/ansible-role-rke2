@@ -1,11 +1,11 @@
 ---
-- name: systemd daemon reload
+- name: Systemd daemon reload
   ansible.builtin.service:
     daemon_reload: true
   become: true
   listen: systemd daemon reload
 
-- name: restart rke2 agent service
+- name: Restart rke2 agent service
   ansible.builtin.service:
     state: restarted
     name: rke2-agent.service
@@ -13,7 +13,7 @@
   throttle: 1
   listen: restart rke2 agent service
 
-- name: restart rke2 server service
+- name: Restart rke2 server service
   ansible.builtin.service:
     state: restarted
     name: rke2-server.service
@@ -21,7 +21,7 @@
   throttle: 1
   listen: restart rke2 server service
 
-- name: restart rke2 server service
+- name: Restart rke2 server service
   ansible.builtin.service:
     state: restarted
     name: systemd-sysctl
