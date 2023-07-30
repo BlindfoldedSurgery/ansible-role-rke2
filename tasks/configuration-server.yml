@@ -9,7 +9,7 @@
     - systemd daemon reload
     - restart rke2 server service
   when:
-    - inventory_hostname == groups["master"]|first
+    - inventory_hostname == groups["master"] | first
 
 - name: Copy k8s admission configuration to nodes
   ansible.builtin.copy:
@@ -46,7 +46,7 @@
     mode: "0600"
   notify: Restart rke2 server service
   when:
-    - inventory_hostname == groups["master"]|first
+    - inventory_hostname == groups["master"] | first
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
@@ -56,14 +56,14 @@
     path: "{{ root_kubeconfig }}"
     delay: 5
   when:
-    - inventory_hostname == groups["master"]|first
+    - inventory_hostname == groups["master"] | first
 
 - name: Fetch admin kubeconfig from master0
   ansible.builtin.slurp:
     src: "{{ root_kubeconfig }}"
   register: kubeconfig
   when:
-    - inventory_hostname == groups["master"]|first
+    - inventory_hostname == groups["master"] | first
 
 - name: Write local kubeconfig
   ansible.builtin.copy:
@@ -73,7 +73,7 @@
   delegate_to: localhost
   become_user: "{{ local_kubeconfig_become_user }}"
   when:
-    - inventory_hostname == groups["master"]|first
+    - inventory_hostname == groups["master"] | first
 
 - name: Replace server address in kubeconfig
   ansible.builtin.lineinfile:
@@ -81,17 +81,17 @@
     line: "    server: https://{{ server.address }}:6443"
     regex: "^    server: "
   when:
-    - inventory_hostname == groups["master"]|first
+    - inventory_hostname == groups["master"] | first
   delegate_to: localhost
   become_user: "{{ local_kubeconfig_become_user }}"
 
 - name: Wait for k8s api
   ansible.builtin.wait_for:
-    host: "{{ hostvars[inventory_hostname]['groups']['loadbalancer_external']|first }}"
+    host: "{{ hostvars[inventory_hostname]['groups']['loadbalancer_external'] | first }}"
     port: 6443
     delay: 5
   when:
-    - inventory_hostname == groups["master"]|first
+    - inventory_hostname == groups["master"] | first
 
 - name: Configure remaining masters
   ansible.builtin.template:
@@ -102,7 +102,7 @@
     mode: "0600"
   notify: Restart rke2 server service
   when:
-    - not inventory_hostname == groups["master"]|first
+    - not inventory_hostname == groups["master"] | first
 
 - name: Start rke2-server on master > 0
   ansible.builtin.copy:
@@ -114,7 +114,7 @@
     - Systemd daemon reload
     - Restart rke2 server service
   when:
-    - not inventory_hostname == groups["master"]|first
+    - not inventory_hostname == groups["master"] | first
 
 - name: Start/enable all rke2-server services
   ansible.builtin.systemd:

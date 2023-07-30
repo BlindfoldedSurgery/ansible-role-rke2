@@ -1,4 +1,4 @@
-server: "https://{{ hostvars[inventory_hostname]['groups']['loadbalancer_internal']|first }}:9345" # TODO: use lb address
+server: "https://{{ hostvars[inventory_hostname]['groups']['loadbalancer_internal'] | first }}:9345" # TODO: use lb address
 data-dir: {{ data_dir }}
 token: {{ rke2_join_token }}
 node-name: {{ inventory_hostname | replace("_", "-") }}
