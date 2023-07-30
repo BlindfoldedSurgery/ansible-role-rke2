@@ -1,25 +1,25 @@
 ---
 - name: Get tarball checksum
   ansible.builtin.uri:
-      url: https://github.com/rancher/rke2/releases/download/{{ rke2.version }}/sha256sum-amd64.txt
-      return_content: true
+    url: https://github.com/rancher/rke2/releases/download/{{ rke2.version }}/sha256sum-amd64.txt
+    return_content: true
   register: checksums
 
 - name: Create tempfile for tarball
   ansible.builtin.tempfile:
-      state: file
+    state: file
   register: tarball_tempfile
   check_mode: false
   changed_when: false
 
 - name: Download tarball
   ansible.builtin.get_url:
-      url: "https://github.com/rancher/rke2/releases/download/{{ rke2.version }}/rke2.linux-amd64.tar.gz"
-      dest: "{{ tarball_tempfile.path }}"
-      mode: '0644'
-      checksum: "sha256:{{ checksum }}"
+    url: https://github.com/rancher/rke2/releases/download/{{ rke2.version }}/rke2.linux-amd64.tar.gz
+    dest: "{{ tarball_tempfile.path }}"
+    mode: "0644"
+    checksum: sha256:{{ checksum }}
   vars:
-      checksum: "{{ checksums.content | regex_search('[0-9a-f]+ +rke2.linux-amd64.tar.gz') | regex_search('^[0-9a-f]+') }}"
+    checksum: "{{ checksums.content | regex_search('[0-9a-f]+ +rke2.linux-amd64.tar.gz') | regex_search('^[0-9a-f]+') }}"
   check_mode: false
 
 - name: Extract tarball

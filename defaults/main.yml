@@ -1,4 +1,5 @@
-rke2_kube_apiserver_nodeport_range: "30000-32767"
+---
+rke2_kube_apiserver_nodeport_range: 30000-32767
 root_kubeconfig: /root/.kube/config
 local_kubeconfig: /home/torben/.kube/rke2-admin-config
 
@@ -16,26 +17,26 @@ cluster:
 apiserver:
   args:
   # - "enable-admission-plugins=NodeRestriction,EventRateLimit"
-  - "enable-admission-plugins=NodeRestriction"
-  - "service-node-port-range={{ rke2_kube_apiserver_nodeport_range }}"
-  - "tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    - enable-admission-plugins=NodeRestriction
+    - service-node-port-range={{ rke2_kube_apiserver_nodeport_range }}
+    - tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
   extra_mount:
-  - "/etc/kubneretes/adm-control:/etc/kubernetes/adm-control:ro"
+    - /etc/kubneretes/adm-control:/etc/kubernetes/adm-control:ro
 scheduler:
   args:
-  - "bind-address=0.0.0.0"
-  - "secure-port=10259"
-  - "authorization-kubeconfig=/var/lib/rancher/rke2/server/cred/scheduler.kubeconfig"
-  - "authentication-kubeconfig=/var/lib/rancher/rke2/server/cred/scheduler.kubeconfig"
+    - bind-address=0.0.0.0
+    - secure-port=10259
+    - authorization-kubeconfig=/var/lib/rancher/rke2/server/cred/scheduler.kubeconfig
+    - authentication-kubeconfig=/var/lib/rancher/rke2/server/cred/scheduler.kubeconfig
 controller_manager:
   args:
-  - "bind-address=0.0.0.0"
-  - "secure-port=10257"
-  - "authorization-kubeconfig=/var/lib/rancher/rke2/server/cred/controller.kubeconfig"
-  - "authentication-kubeconfig=/var/lib/rancher/rke2/server/cred/controller.kubeconfig"
+    - bind-address=0.0.0.0
+    - secure-port=10257
+    - authorization-kubeconfig=/var/lib/rancher/rke2/server/cred/controller.kubeconfig
+    - authentication-kubeconfig=/var/lib/rancher/rke2/server/cred/controller.kubeconfig
 kubelet:
   args:
-  - "tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    - tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 etcd:
   metrics: false
   snapshot:
@@ -43,7 +44,7 @@ etcd:
     retention: 10
     dir: "{{ data_dir }}/server/db/snapshots"
 disable:
-- rke2-ingress-nginx
+  - rke2-ingress-nginx
 registry:
   default: docker.io
 cni: cilium
@@ -53,3 +54,5 @@ s3_backup:
   endpoint: sos-de-fra-1.exo.io
   bucket: rke2-etcd-backup
   region: de-fra-1
+
+local_kubeconfig_become_user: torben

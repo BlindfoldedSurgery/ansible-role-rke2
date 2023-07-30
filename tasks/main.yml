@@ -2,25 +2,25 @@
 - name: Install rke2
   ansible.builtin.import_tasks: installation.yml
   tags:
-      - rke2:install
+    - rke2:install
   become: true
 
 - name: Configure nodes for rke2
   ansible.builtin.import_tasks: configuration.yml
   tags:
-      - rke2:config
+    - rke2:config
   become: true
 
 - name: Configure rke2-servers
   ansible.builtin.import_tasks: configuration-server.yml
   tags:
-      - rke2:config
+    - rke2:config
   become: true
   when: inventory_hostname in groups["master"]
 
 - name: Configure rke2-agents
   ansible.builtin.import_tasks: configuration-agent.yml
   tags:
-      - rke2:config
+    - rke2:config
   become: true
   when: inventory_hostname in groups["worker"]

@@ -1,3 +1,4 @@
+---
 - name: set node-ip
   ansible.builtin.shell:
     cmd: ip a | grep "10\.0\.0\.[3-9]" | awk '{print $2}' | cut -f1 -d'/'
@@ -9,18 +10,18 @@
     dest: /etc/rancher/rke2/config.yaml
     owner: root
     group: root
-    mode: '0600'
-  notify: "restart rke2 agent service"
+    mode: "0600"
+  notify: restart rke2 agent service
 
 - name: Start rke2-agent
   ansible.builtin.copy:
-    src: '/usr/local/lib/systemd/system/rke2-agent.service'
-    dest: '/etc/systemd/system/rke2-agent.service'
-    mode: '0644'
+    src: /usr/local/lib/systemd/system/rke2-agent.service
+    dest: /etc/systemd/system/rke2-agent.service
+    mode: "0644"
     remote_src: true
   notify:
-  - systemd daemon reload
-  - "restart rke2 agent service"
+    - systemd daemon reload
+    - restart rke2 agent service
 
 - name: Start/enable all rke2-agent services
   ansible.builtin.systemd:
