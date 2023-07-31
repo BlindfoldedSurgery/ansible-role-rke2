@@ -1,7 +1,6 @@
 ---
 rke2_kube_apiserver_nodeport_range: 30000-32767
 root_kubeconfig: /root/.kube/config
-local_kubeconfig: /home/torben/.kube/rke2-admin-config
 
 rke2:
   version: v1.27.4+rke2r1
@@ -55,4 +54,5 @@ s3_backup:
   bucket: rke2-etcd-backup
   region: de-fra-1
 
+local_kubeconfig: /home/torben/.kube/rke2-admin-config
 local_kubeconfig_become_user: torben
