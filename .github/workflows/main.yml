@@ -1,0 +1,22 @@
+name: Workflow
+
+on:
+  push: { }
+  pull_request: { }
+
+jobs:
+  validate-renovate-config:
+    name: Validate Renovate configuration
+    uses: BlindfoldedSurgery/renovate-config/.github/workflows/validate.yml@main
+
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      ASDF_PYAPP_INCLUDE_DEPS: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: asdf-vm/actions/setup@v3
+      - run: asdf plugin add ansible https://github.com/amrox/asdf-pyapp.git
+      - run: asdf plugin add ansible-lint https://github.com/amrox/asdf-pyapp.git
+      - uses: asdf-vm/actions/install@v3
+      - run: ansible-lint --strict **
