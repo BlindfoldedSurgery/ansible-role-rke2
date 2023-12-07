@@ -72,6 +72,7 @@
     mode: "0600"
   delegate_to: localhost
   become_user: "{{ local_kubeconfig_become_user }}"
+  become: true
   when:
     - inventory_hostname == groups["master"] | first
 
@@ -84,6 +85,7 @@
     - inventory_hostname == groups["master"] | first
   delegate_to: localhost
   become_user: "{{ local_kubeconfig_become_user }}"
+  become: true
 
 - name: Wait for k8s api
   ansible.builtin.wait_for:

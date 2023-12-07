@@ -4,6 +4,7 @@
     url: https://github.com/rancher/rke2/releases/download/{{ rke2.version }}/sha256sum-amd64.txt
     return_content: true
   register: checksums
+  check_mode: false
 
 - name: Create tempfile for tarball
   ansible.builtin.tempfile:
@@ -21,14 +22,16 @@
   vars:
     checksum: "{{ checksums.content | regex_search('[0-9a-f]+ +rke2.linux-amd64.tar.gz') | regex_search('^[0-9a-f]+') }}"
   check_mode: false
+  register: download_info
 
-- name: Extract tarball
+- name: Extract tarball  # noqa command-instead-of-module
   # ansible.builtin.unarchive:
   #     src: "{{ tarball_tempfile.path }}"
   #     dest: /usr/local
   #     remote_src: true
-  ansible.builtin.shell: tar xzf "{{ tarball_tempfile.path }}" -C /usr/local
+  ansible.builtin.command: tar xzf "{{ tarball_tempfile.path }}" -C /usr/local
   notify: Systemd daemon reload
+  changed_when: "{{ download_info.changed }}"
 
 - name: Delete tarball
   ansible.builtin.file:
