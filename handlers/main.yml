@@ -1,5 +1,5 @@
 ---
-- name: Systemd daemon reload
+- name: Systemd daemon reload # noqa args[module]
   ansible.builtin.service:
     daemon_reload: true
   become: true
