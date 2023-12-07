@@ -1,0 +1,16 @@
+namespace: "blindfoldedsurgery"
+name: "ansible_role_rke2"
+description: "Role to install rke2 on a ubuntu amd64 server (via .tar.gz file)"
+
+version: "1.0.0"
+readme: "README.md"
+authors:
+  - "Torben Carstens"
+license:
+  - "MIT"
+tags:
+  - "rke2"
+  - "infrastructure"
+  - "linux"
+  - "cloud"
+repository: "https://github.com/BlindfoldedSurgery/ansible-role-rke2"
